@@ -12,7 +12,7 @@ import modal.ArticleDAO;
 
 /**
  *
- * @author Thaycacac
+ * @author hieupnh
  */
 public class Search extends HttpServlet {
 

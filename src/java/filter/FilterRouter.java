@@ -11,12 +11,12 @@ import java.io.StringWriter;
 
 /**
  *
- * @author hieupnhhieupnh
+ * @author hieupnh
  */
 @WebFilter(filterName = "FilterRouter", urlPatterns = {"/search.jsp", "/error.jsp", "/index.jsp"}, dispatcherTypes = {DispatcherType.REQUEST})
 public class FilterRouter implements Filter {
     
-    private static final debug = true;
+    private static final boolean debug = true;
 
     private FilterConfig filterConfig = null;
     
@@ -33,7 +33,7 @@ public class FilterRouter implements Filter {
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
-            log("FilterJsp:DoAfterProcessing");
+            log("FilterRouter:DoAfterProcessing");
         }
     }
 
@@ -42,7 +42,7 @@ public class FilterRouter implements Filter {
             throws IOException, ServletException {
         
         if (debug) {
-            log("FilterJsp:doFilter()");
+            log("FilterRouter:doFilter");
         }
         
         doBeforeProcessing(request, response);
@@ -90,7 +90,7 @@ public class FilterRouter implements Filter {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
             if (debug) {                
-                log("FilterJsp:Initializing filter");
+                log("FilterRouter:Initializing filter");
             }
         }
     }
@@ -98,9 +98,9 @@ public class FilterRouter implements Filter {
     @Override
     public String toString() {
         if (filterConfig == null) {
-            return ("FilterJsp()");
+            return ("FilterRouter");
         }
-        StringBuffer sb = new StringBuffer("FilterJsp(");
+        StringBuffer sb = new StringBuffer("FilterRouter(");
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());

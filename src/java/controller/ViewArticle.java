@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @authorhhieupnh
+ * @author hieupnh
  */
 public class ViewArticle extends HttpServlet {
 

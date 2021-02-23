@@ -46,12 +46,3 @@
         </session-timeout>
     </session-config>
 </web-app>
-<!--Tomcat
-<Context path="/J3.L.P0013">
-    <Environment name="severName" type="java.lang.String" value="DESKTOP-7IGOK4E"/>
-    <Environment name="port" type="java.lang.String" value="1433"/>
-    <Environment name="username" type="java.lang.String" value="sa"/>
-    <Environment name="password" type="java.lang.String" value="123456"/>
-    <Environment name="dbName" type="java.lang.String" value="J3.L.P0013"/>
-    <Environment name="imgFolder" type="java.lang.String" value="image/"/>
-</Context>-->

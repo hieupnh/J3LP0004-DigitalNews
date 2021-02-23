@@ -1,5 +1,7 @@
 package db;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,14 +13,24 @@ import java.sql.SQLException;
  * @author hieupnh
  */
 public class DBContext {
-    private final String server = "localhost"; //127.0.0.1
-    private final String database = "Digital News";
-    private final String port = "1433";
-    private final String username= "sa";
-    private final String password = "123456";
+    private final String serverName;
+    private final String database;
+    private final String port;
+    private final String username;
+    private final String password;
+
+    public DBContext() throws Exception {
+        InitialContext initCxt = new InitialContext();
+        Context ctx = (Context) initCxt.lookup("java:/comp/env");
+        serverName = (String) ctx.lookup("severName");
+        port = (String) ctx.lookup("port");
+        username = (String) ctx.lookup("username");
+        password = (String) ctx.lookup("password");
+        database = (String) ctx.lookup("database");
+    }
 
     public Connection getConnection() throws Exception {
-        String url = "jdbc:sqlserver://" + server + ":" + port + ";databaseName=" + database;
+        String url = "jdbc:sqlserver://" + serverName + ":" + port + ";databaseName=" + database;
         Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
         return DriverManager.getConnection(url, username, password);
     }
