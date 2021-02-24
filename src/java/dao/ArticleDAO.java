@@ -1,6 +1,6 @@
-package modal;
+package dao;
 
-import entity.Article;
+import model.Article;
 import db.DBContext;
 import java.sql.Connection;
 import java.sql.Date;
@@ -20,10 +20,10 @@ public class ArticleDAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         String sql = "SELECT TOP (?) * "
-                + "FROM Article \n"
+                + "FROM Article "
                 + "ORDER BY Date DESC";
 
-        ArrayList<Article> listArticle = new ArrayList<>();
+        ArrayList<Article> articles = new ArrayList<>();
         try {
             db = new DBContext();
             con = db.getConnection();
@@ -39,12 +39,11 @@ public class ArticleDAO {
                 Date date = rs.getDate(5);
                 String author = rs.getString(6);
                 Article article = new Article(id, title, image, content, date, author);
-                listArticle.add(article);
+                articles.add(article);
             }
-            return listArticle;
+            return articles;
 
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw ex;
         } finally {
             db.closeConnection(con, ps, rs);
@@ -75,7 +74,6 @@ public class ArticleDAO {
             }
 
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw ex;
         } finally {
             db.closeConnection(con, ps, rs);
@@ -123,7 +121,6 @@ public class ArticleDAO {
             }
             return listArticle;
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw ex;
         } finally {
             db.closeConnection(con, ps, rs);
@@ -135,7 +132,6 @@ public class ArticleDAO {
         Connection con = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
-        ArrayList<Article> listArticle = new ArrayList<>();
         String sql = "SELECT COUNT(id) FROM Article \n"
                 + "WHERE content\n"
                 + "LIKE ? OR title LIKE ?";
@@ -153,7 +149,6 @@ public class ArticleDAO {
                 return (numberArticle + (numberArticle % numberArticleInPage)) / numberArticleInPage;
             }
         } catch (Exception ex) {
-            ex.printStackTrace();
             throw ex;
         } finally {
             db.closeConnection(con, ps, rs);

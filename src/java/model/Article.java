@@ -1,4 +1,4 @@
-package entity;
+package model;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -26,10 +26,10 @@ public class Article {
         this.content = content;
         this.date = date;
         this.author = author;
-        if (content.length() <= 100) {
+        if (content.length() <= 200) {
             this.description = content + "...";
         } else {
-            this.description = content.substring(0, 100) + "...";
+            this.description = content.substring(0, 200) + "...";
         }
     }
 
@@ -90,7 +90,7 @@ public class Article {
     }
 
     public String getDateFormat() {
-        return new SimpleDateFormat("MMMM dd yyy '-' HH:mmaaa").format(this.date).toLowerCase();
+        return new SimpleDateFormat("MMMM dd yyy '-' HH:mm").format(this.date).toLowerCase();
     }
 
 }

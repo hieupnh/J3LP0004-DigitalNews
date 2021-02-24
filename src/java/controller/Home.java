@@ -1,7 +1,7 @@
 package controller;
 
-import entity.Article;
-import modal.ArticleDAO;
+import model.Article;
+import dao.ArticleDAO;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

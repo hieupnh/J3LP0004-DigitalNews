@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,21 +16,21 @@ import java.io.StringWriter;
  */
 @WebFilter(filterName = "FilterRouter", urlPatterns = {"/search.jsp", "/error.jsp", "/index.jsp"}, dispatcherTypes = {DispatcherType.REQUEST})
 public class FilterRouter implements Filter {
-    
+
     private static final boolean debug = true;
 
     private FilterConfig filterConfig = null;
-    
+
     public FilterRouter() {
-    }    
-    
+    }
+
     private void doBeforeProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
             log("FilterRouter:DoBeforeProcessing");
         }
-    }    
-    
+    }
+
     private void doAfterProcessing(ServletRequest request, ServletResponse response)
             throws IOException, ServletException {
         if (debug) {
@@ -40,29 +41,28 @@ public class FilterRouter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain)
             throws IOException, ServletException {
-        
+
         if (debug) {
             log("FilterRouter:doFilter");
         }
-        
+
         doBeforeProcessing(request, response);
         /**
          * Write code filter here
          */
-        
-        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-        HttpServletResponse httpServletResponse = (HttpServletResponse)response;
-        
+
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+
         httpServletRequest.getRequestDispatcher("/home").forward(httpServletRequest, httpServletResponse);
-        
+
         Throwable problem = null;
         try {
             chain.doFilter(request, response);
-        } catch (Throwable t) {
+        } catch (IOException | ServletException t) {
             problem = t;
-            t.printStackTrace();
         }
-        
+
         doAfterProcessing(request, response);
         if (problem != null) {
             if (problem instanceof ServletException) {
@@ -83,13 +83,13 @@ public class FilterRouter implements Filter {
         this.filterConfig = filterConfig;
     }
 
-    public void destroy() {        
+    public void destroy() {
     }
 
-    public void init(FilterConfig filterConfig) {        
+    public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
         if (filterConfig != null) {
-            if (debug) {                
+            if (debug) {
                 log("FilterRouter:Initializing filter");
             }
         }
@@ -100,42 +100,41 @@ public class FilterRouter implements Filter {
         if (filterConfig == null) {
             return ("FilterRouter");
         }
-        StringBuffer sb = new StringBuffer("FilterRouter(");
+        StringBuilder sb = new StringBuilder("FilterRouter(");
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());
     }
-    
+
     private void sendProcessingError(Throwable t, ServletResponse response) {
-        String stackTrace = getStackTrace(t);        
-        
-        if (stackTrace != null && !stackTrace.equals("")) {
-            try {
+        String stackTrace = getStackTrace(t);
+        try {
+
+            if (stackTrace != null && !stackTrace.equals("")) {
                 response.setContentType("text/html");
                 PrintStream ps = new PrintStream(response.getOutputStream());
-                PrintWriter pw = new PrintWriter(ps);                
+                PrintWriter pw = new PrintWriter(ps);
                 pw.print("<html>\n<head>\n<title>Error</title>\n</head>\n<body>\n"); //NOI18N
 
                 // PENDING! Localize this for next official release
-                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");                
-                pw.print(stackTrace);                
+                pw.print("<h1>The resource did not process correctly</h1>\n<pre>\n");
+                pw.print(stackTrace);
                 pw.print("</pre></body>\n</html>"); //NOI18N
                 pw.close();
                 ps.close();
                 response.getOutputStream().close();
-            } catch (Exception ex) {
-            }
-        } else {
-            try {
+
+            } else {
                 PrintStream ps = new PrintStream(response.getOutputStream());
                 t.printStackTrace(ps);
                 ps.close();
                 response.getOutputStream().close();
-            } catch (Exception ex) {
             }
+        } catch (IOException ex) {
+            Logger.getLogger(ex.getMessage());
         }
     }
-    
+
     public static String getStackTrace(Throwable t) {
         String stackTrace = null;
         try {
@@ -146,12 +145,13 @@ public class FilterRouter implements Filter {
             sw.close();
             stackTrace = sw.getBuffer().toString();
         } catch (Exception ex) {
+            Logger.getLogger(ex.getMessage());
         }
         return stackTrace;
     }
-    
+
     public void log(String msg) {
-        filterConfig.getServletContext().log(msg);        
+        filterConfig.getServletContext().log(msg);
     }
-    
+
 }
